@@ -33,6 +33,7 @@ private:
     QCustomPlot * customPlot;
     int qtdPontosGrafico;
     int indiceGrafico;
+    float fatorDeConversao;
     bool isPortaSelecionada;
 
     void plotaGrafico(float x, float y);

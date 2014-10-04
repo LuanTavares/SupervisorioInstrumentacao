@@ -13,15 +13,18 @@ Supervisorio::Supervisorio(QWidget *parent) : QMainWindow(parent), ui(new Ui::Su
     }
 
     leituraDaSerial = new QTimer();
-    leituraDaSerial->start(100);
+    leituraDaSerial->start(5); // Tempo de Leitura
     qtdPontosGrafico = 200;
 
     atualizaTela = new QTimer();
-    atualizaTela->start(50);
+    atualizaTela->start(5); // Tempo de Amostragem
 
     customPlot = new QCustomPlot();
     customPlot->addGraph();
     ui->verticalLayout->addWidget(customPlot);
+
+    fatorDeConversao = (float) (5.0/1023.0);
+    qDebug() << fatorDeConversao;
 
     isPortaSelecionada = false;
 
@@ -34,16 +37,17 @@ Supervisorio::Supervisorio(QWidget *parent) : QMainWindow(parent), ui(new Ui::Su
 
 Supervisorio::~Supervisorio() {
     delete ui;
+    portaSelecionada.close();
 }
 
 void Supervisorio::selecionaPortaSerial(int porta) {
     portaSelecionada.setPortName(serial->selecionaPorta(porta).portName());
-    portaSelecionada.setBaudRate(QSerialPort::Baud9600);
+    portaSelecionada.setBaudRate(QSerialPort::Baud115200);
     portaSelecionada.setDataBits(QSerialPort::Data8);
     portaSelecionada.setParity(QSerialPort::NoParity);
     portaSelecionada.setStopBits(QSerialPort::OneStop);
     if (portaSelecionada.open(QIODevice::ReadWrite)) {
-        isPortaSelecionada = portaSelecionada.setBaudRate(QSerialPort::Baud9600) &
+        isPortaSelecionada = portaSelecionada.setBaudRate(QSerialPort::Baud115200) &
                              portaSelecionada.setStopBits(QSerialPort::OneStop) &
                              portaSelecionada.setDataBits(QSerialPort::Data8) &
                              portaSelecionada.setParity(QSerialPort::NoParity) &
@@ -105,6 +109,8 @@ void Supervisorio::atualizaDados() {
                     j++;
                 }
                 float valorConvertido = valorLido.toFloat();
+                valorConvertido *= fatorDeConversao;
+                //qDebug() << valorConvertido << "  " << fatorDeConversao;
                 plotaGrafico(1,valorConvertido);
             }
             valorLido.clear();
