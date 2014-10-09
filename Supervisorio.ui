@@ -19,7 +19,7 @@
      <rect>
       <x>140</x>
       <y>10</y>
-      <width>161</width>
+      <width>241</width>
       <height>22</height>
      </rect>
     </property>
@@ -62,6 +62,45 @@
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="pushButtonSalvar">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>10</y>
+      <width>131</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Salvar dados em Arquivo</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonParar">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>10</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parar Aquisição</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonIniciar">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>10</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Iniciar aquisição</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -69,7 +108,7 @@
      <x>0</x>
      <y>0</y>
      <width>1147</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

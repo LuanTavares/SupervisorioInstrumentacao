@@ -13,18 +13,14 @@ Supervisorio::Supervisorio(QWidget *parent) : QMainWindow(parent), ui(new Ui::Su
     }
 
     leituraDaSerial = new QTimer();
-    leituraDaSerial->start(5); // Tempo de Leitura
-    qtdPontosGrafico = 200;
-
     atualizaTela = new QTimer();
-    atualizaTela->start(5); // Tempo de Amostragem
+    qtdPontosGrafico = 200;
 
     customPlot = new QCustomPlot();
     customPlot->addGraph();
     ui->verticalLayout->addWidget(customPlot);
 
     fatorDeConversao = (float) (5.0/1023.0);
-    qDebug() << fatorDeConversao;
 
     isPortaSelecionada = false;
 
@@ -33,6 +29,9 @@ Supervisorio::Supervisorio(QWidget *parent) : QMainWindow(parent), ui(new Ui::Su
     connect(ui->comboBoxPortasSeriais, SIGNAL(currentIndexChanged(int)), this, SLOT(selecionaPortaSerial(int)));
     connect(leituraDaSerial, SIGNAL(timeout()), this, SLOT(leDadosDaPortaSerial()));
     connect(atualizaTela, SIGNAL(timeout()), this, SLOT(atualizaDados()));
+    connect(ui->pushButtonSalvar, SIGNAL(clicked()), this, SLOT(salvarEmArquivo()));
+    connect(ui->pushButtonIniciar, SIGNAL(clicked()), this, SLOT(iniciaLeitura()));
+    connect(ui->pushButtonParar, SIGNAL(clicked()), this, SLOT(paraLeitura()));
 }
 
 Supervisorio::~Supervisorio() {
@@ -96,7 +95,7 @@ void Supervisorio::plotaGrafico(float x, float y) {
 
 void Supervisorio::atualizaDados() {
     if (isPortaSelecionada) {
-
+        stringArquivo += stringLida;
         if (stringLida.size() > 0) {
             QString valorLido;
 
@@ -117,4 +116,29 @@ void Supervisorio::atualizaDados() {
             stringLida.remove(0,ultimoRegistro+1);
         }
     }
+}
+
+void Supervisorio::salvarEmArquivo() {
+    diretorio = QFileDialog::getOpenFileName(this, tr("Abrir Arquivo"), QDir::currentPath(), tr("Files (*.txt)"));
+    if (diretorio.size() > 0) {
+        arquivo = new QFile(diretorio);
+        if (!arquivo->open(QIODevice::ReadWrite | QIODevice::Text))
+            std::cout << "Não foi possível abrir o arquivo: " << diretorio.toStdString() << std::endl;
+        else {
+            arquivo->write(stringArquivo);
+            arquivo->close();
+        }
+    } else {
+        std::cout << "Não foi possível localizar o diretório: "<< diretorio.toStdString() << std::endl;
+    }
+}
+
+void Supervisorio::iniciaLeitura() {
+    atualizaTela->start(5); // Tempo de Amostragem
+    leituraDaSerial->start(5); // Tempo de Leitura
+}
+
+void Supervisorio::paraLeitura() {
+    atualizaTela->stop();
+    leituraDaSerial->stop();
 }

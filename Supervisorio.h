@@ -6,6 +6,7 @@
 #include <QByteArray>
 #include <iostream>
 #include <QDebug>
+#include <QFile>
 #include "Serial.h"
 #include "qcustomplot.h"
 
@@ -26,6 +27,7 @@ private:
     Serial * serial;
     QSerialPort portaSelecionada;
     QByteArray stringLida;
+    QByteArray stringArquivo;
     QTimer * leituraDaSerial;
     QTimer * atualizaTela;
     QVector <double> yAxis;
@@ -35,6 +37,9 @@ private:
     int indiceGrafico;
     float fatorDeConversao;
     bool isPortaSelecionada;
+    bool isLendoDados;
+    QString diretorio;
+    QFile * arquivo;
 
     void plotaGrafico(float x, float y);
 
@@ -42,6 +47,9 @@ public slots:
     void selecionaPortaSerial(int porta);
     void leDadosDaPortaSerial();
     void atualizaDados();
+    void salvarEmArquivo();
+    void iniciaLeitura();
+    void paraLeitura();
 };
 
 #endif // SUPERVISORIO_H
