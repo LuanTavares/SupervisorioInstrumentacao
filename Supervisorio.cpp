@@ -25,6 +25,7 @@ Supervisorio::Supervisorio(QWidget *parent) : QMainWindow(parent), ui(new Ui::Su
     isPortaSelecionada = false;
 
     indiceGrafico = 0;
+    stringArquivo.clear();
 
     connect(ui->comboBoxPortasSeriais, SIGNAL(currentIndexChanged(int)), this, SLOT(selecionaPortaSerial(int)));
     connect(leituraDaSerial, SIGNAL(timeout()), this, SLOT(leDadosDaPortaSerial()));
@@ -84,7 +85,6 @@ void Supervisorio::plotaGrafico(float x, float y) {
         xAxis.push_back(x+(xAxis.last()));
     }
 
-    //qDebug() << y << " " << xAxis.last();
     customPlot->graph(0)->setData(xAxis,yAxis);
     customPlot->xAxis->setLabel("Tempo (ms)");
     customPlot->xAxis->setRange(0, qtdPontosGrafico);
@@ -95,13 +95,12 @@ void Supervisorio::plotaGrafico(float x, float y) {
 
 void Supervisorio::atualizaDados() {
     if (isPortaSelecionada) {
-        stringArquivo += stringLida;
         if (stringLida.size() > 0) {
             QString valorLido;
 
             int primeiroRegistro = stringLida.indexOf('[');
             int ultimoRegistro = stringLida.indexOf(']');
-            if ((primeiroRegistro != -1) &&(ultimoRegistro != -1)) {
+            if ((primeiroRegistro != -1) && (ultimoRegistro != -1) && (ultimoRegistro > primeiroRegistro)) {
                 int j=0;
                 for (int i= primeiroRegistro+1; i<ultimoRegistro; i++) {
                     valorLido.insert(j,stringLida.at(i));
@@ -109,17 +108,21 @@ void Supervisorio::atualizaDados() {
                 }
                 float valorConvertido = valorLido.toFloat();
                 valorConvertido *= fatorDeConversao;
-                //qDebug() << valorConvertido << "  " << fatorDeConversao;
                 plotaGrafico(1,valorConvertido);
+                if (valorLido.size() > 0 && valorConvertido > 0)
+                    stringArquivo += "["+valorLido.toLatin1()+"] ";
             }
             valorLido.clear();
-            stringLida.remove(0,ultimoRegistro+1);
+            if (primeiroRegistro = -1)
+                stringLida.remove(0,ultimoRegistro+1);
+            else if (primeiroRegistro != -1 && ultimoRegistro != -1)
+                stringLida.remove(0,ultimoRegistro+1);
         }
     }
 }
 
 void Supervisorio::salvarEmArquivo() {
-    diretorio = QFileDialog::getOpenFileName(this, tr("Abrir Arquivo"), QDir::currentPath(), tr("Files (*.txt)"));
+    diretorio = QFileDialog::getSaveFileName(this, tr("Abrir Arquivo"), QDir::currentPath(), tr("Files (*.txt)"));
     if (diretorio.size() > 0) {
         arquivo = new QFile(diretorio);
         if (!arquivo->open(QIODevice::ReadWrite | QIODevice::Text))
@@ -141,4 +144,5 @@ void Supervisorio::iniciaLeitura() {
 void Supervisorio::paraLeitura() {
     atualizaTela->stop();
     leituraDaSerial->stop();
+    stringLida.clear();
 }
