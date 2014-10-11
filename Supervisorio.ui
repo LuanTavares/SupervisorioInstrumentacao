@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>Supervisorio</class>
  <widget class="QMainWindow" name="Supervisorio">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +20,7 @@
    <widget class="QComboBox" name="comboBoxPortasSeriais">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>168</x>
       <y>10</y>
       <width>241</width>
       <height>22</height>
@@ -27,9 +30,9 @@
    <widget class="QLabel" name="labelPortaSerial">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>18</x>
       <y>10</y>
-      <width>121</width>
+      <width>150</width>
       <height>16</height>
      </rect>
     </property>
@@ -65,9 +68,9 @@
    <widget class="QPushButton" name="pushButtonSalvar">
     <property name="geometry">
      <rect>
-      <x>700</x>
+      <x>708</x>
       <y>10</y>
-      <width>131</width>
+      <width>150</width>
       <height>23</height>
      </rect>
     </property>
@@ -78,9 +81,9 @@
    <widget class="QPushButton" name="pushButtonParar">
     <property name="geometry">
      <rect>
-      <x>560</x>
+      <x>571</x>
       <y>10</y>
-      <width>91</width>
+      <width>110</width>
       <height>23</height>
      </rect>
     </property>
@@ -91,9 +94,9 @@
    <widget class="QPushButton" name="pushButtonIniciar">
     <property name="geometry">
      <rect>
-      <x>420</x>
+      <x>433</x>
       <y>10</y>
-      <width>91</width>
+      <width>110</width>
       <height>23</height>
      </rect>
     </property>
@@ -108,7 +111,7 @@
      <x>0</x>
      <y>0</y>
      <width>1147</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
