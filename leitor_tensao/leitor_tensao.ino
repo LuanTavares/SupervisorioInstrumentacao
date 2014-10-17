@@ -9,20 +9,24 @@ float res = 0;
 void setup()
 {
   Serial.begin(115200);          //  setup serial  
+  pinMode(50, OUTPUT); 
 }
 
 void loop()
 {
    val = analogRead(analogPin);
    
+   digitalWrite(50, HIGH);
+   //if (val > 0)
+   //{
 
-   if (val > 0)
-   {
+      
       Serial.print("[");
       Serial.print(val);
       Serial.print("]"); 
-   }
+   //}
    
    delay(5); //20ms = 1/50Hz
+   digitalWrite(50, LOW);
 }
 
